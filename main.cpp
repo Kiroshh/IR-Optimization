@@ -8,4 +8,7 @@ int main() {
         printf("%i\n", i);
     }
     return 0;
+
+    //TODO: explore relevant parralel usecase for SP
+    //TODO: compare LLVM IR for openmp with optimised(existing)one
 }
