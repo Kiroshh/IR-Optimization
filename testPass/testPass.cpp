@@ -15,7 +15,7 @@ namespace {
         SkeletonPass() : FunctionPass(ID) {}
 
         virtual bool runOnFunction(Function &F) {
-            errs() << "I saw a function called " << F.getName() << "!\n";
+            errs() << " function :  " << F.getName() << "!\n";
             return false;
         }
     };
@@ -24,7 +24,6 @@ namespace {
 char SkeletonPass::ID = 0;
 
 // Automatically enable the pass.
-// http://adriansampson.net/blog/clangpass.html
 static void registerSkeletonPass(const PassManagerBuilder &,
                                  legacy::PassManagerBase &PM) {
     PM.add(new SkeletonPass());

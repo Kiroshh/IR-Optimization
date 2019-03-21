@@ -3,6 +3,11 @@ project(llvm_pass)
 
 set(CMAKE_CXX_STANDARD 14)
 
+
+# added -fopenmp
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fopenmp")
+
+
 find_package(LLVM REQUIRED CONFIG)
 add_definitions(${LLVM_DEFINITIONS})
 include_directories(${LLVM_INCLUDE_DIRS})
@@ -10,4 +15,4 @@ link_directories(${LLVM_LIBRARY_DIRS})
 
 add_subdirectory(testPass)
 
-#add_executable(llvm_pass main.cpp)
+add_executable(llvm_pass main.cpp)
