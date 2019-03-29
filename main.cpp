@@ -1,25 +1,48 @@
-#include <omp.h>
-#include <iostream>
-#include <vector>
-#include <chrono>  // for high_resolution_clock
+#include "main.h"
 
-int main() {
-//    std::vector<int> container;
-//    for (int i=1; i<=100; i++) container.push_back(rand() % 100 + 5);
-    const int N = 100;
+
+void runSequential(int N) {
+
     int a[N];
 
     for (int i = 0; i <= N; i++)
         a[i] = i;
+
+    int seq_local_sum;
+    double seq_start, seq_end;
+
+    printf("running in sequential manner\n");
+
+    seq_local_sum = 0;
+    seq_start = omp_get_wtime();
+    for (int i = 0; i < N; i++) {
+        seq_local_sum += a[i];
+    }
+    seq_end = omp_get_wtime();
+
+    printf("sum = %d \n", seq_local_sum);
+    printf("average_sum = %d\n", seq_local_sum / (N));
+    printf("time taken= %f  seconds\n", (seq_end - seq_start));
+}
+
+void runParralel(int N) {
+
+    int a[N];
+
+    for (int i = 0; i <= N; i++)
+        a[i] = i;
+
     int local_sum, sum;
-//    int seq_sum=0;
-    double startt,end;
+    double start, end;
+
+    printf("running in parralel\n");
+
 
 #pragma omp parallel private(local_sum) shared(sum)
     {
         local_sum = 0;
-        startt =  omp_get_wtime();
-        printf("d",startt);
+        start = omp_get_wtime();
+//        printf("%lf\n",start);
 
 #pragma omp for schedule(static, 1)
         for (int i = 0; i < N; i++) {
@@ -31,21 +54,27 @@ int main() {
     }
     end = omp_get_wtime();
     printf("sum = %d \n", sum);
-    printf("average_sum = %d\n", sum/(N));
-    printf("time taken= %f \n",(end-startt),"seconds");
-
-//    auto start = std::chrono::high_resolution_clock::now();
-
-//
-//    for (int i = 0; i < N; i++) {
-//        seq_sum += a[i];
-//    }
-//
-//    auto finish = std::chrono::high_resolution_clock::now();
-//    printf("seq_sum = %d \n", seq_sum);
-//    std::chrono::duration<double,std::milli> elapsed = finish - start;
-//    std::cout << "Elapsed time: " << elapsed.count() << " ms\n";
-    return 0;
-    //TODO: explore relevant parralel usecase for SP
-    //TODO: compare LLVM IR for openmp with optimised(existing)one
+    printf("average_sum = %d\n", sum / (N));
+    printf("time taken= %f  seconds\n", (end - start));
 }
+
+int main() {
+
+    const int N = 10000;
+    runSequential(N);
+    runParralel(N);
+    return 0;
+
+}
+
+//    //creating a sample file to read from
+//    std::ofstream streamFile;
+//    streamFile.open("/home/kiroshkumar/CLionProjects/llvm-pass/stream.txt");
+//    if (streamFile.is_open()) {
+//        for (int i = 0; i <= 10; i++) {
+//            streamFile << i;
+//            streamFile << "\n";
+//        }
+//        streamFile.close();
+//    } else printf("Unable to open file");
+//TODO: compare LLVM IR for openmp with optimised(existing)one

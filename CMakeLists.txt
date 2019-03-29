@@ -14,5 +14,6 @@ include_directories(${LLVM_INCLUDE_DIRS})
 link_directories(${LLVM_LIBRARY_DIRS})
 
 add_subdirectory(testPass)
+add_subdirectory(analysePass)
 
 add_executable(llvm_pass main.cpp)
